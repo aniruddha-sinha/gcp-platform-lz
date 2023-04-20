@@ -1,6 +1,6 @@
 module "vpc" {
   source = "github.com/aniruddha-sinha/gcp-network-module.git?ref=master"
-  
+
   project-id               = var.project_id
   is-network-created       = false
   regions                  = ["us-central1"]
