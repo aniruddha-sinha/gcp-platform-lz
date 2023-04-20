@@ -2,7 +2,7 @@ terraform {
   cloud {
     organization = "asinha0493"
     workspaces {
-      name = "gcp-platform-parent"
+      name = "gcp-platform-lz"
     }
   }
 
