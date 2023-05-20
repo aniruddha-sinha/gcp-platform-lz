@@ -1,5 +1,5 @@
 module "vpc" {
-  source = "./modules/gcp-network-module"
+  source = "./modules/vpc"
 
   project-id               = var.project_id
   is-network-created       = false
@@ -8,4 +8,15 @@ module "vpc" {
   source-tags              = []
   target-tags              = []
   enable-advanced-features = true
+}
+
+module "iam" {
+  source = "./modules/iam"
+
+  project_id                   = var.project_id
+  service_account_id           = "gke-node-sa"
+  service_account_display_name = "GKE Node Service Account"
+  role_list = [
+    "roles/editor"
+  ]
 }
