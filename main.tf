@@ -72,7 +72,6 @@ module "atlas" {
       "https://www.googleapis.com/auth/cloud-platform"
     ]
     preemptible = true
-    spot        = true
     labels = {
       "usage" = "temp"
     }

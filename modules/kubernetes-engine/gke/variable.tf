@@ -44,7 +44,6 @@ variable "node_config" {
     oauth_scopes    = list(string)
     preemptible     = bool
     service_account = string
-    spot            = bool
     labels          = map(string)
   })
 }

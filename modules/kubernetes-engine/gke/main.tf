@@ -54,7 +54,6 @@ resource "google_container_cluster" "gke_cluster" {
     oauth_scopes    = var.node_config.oauth_scopes
     preemptible     = var.node_config.preemptible
     service_account = var.node_config.service_account
-    spot            = var.node_config.spot
     labels          = var.node_config.labels
   }
 }
