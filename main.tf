@@ -92,7 +92,6 @@ module "atlas" {
       disk_size_gb       = "50"
       service_account    = data.google_service_account.custom_service_account.name
       preemptible        = true
-      spot               = true
     }
   ]
 }

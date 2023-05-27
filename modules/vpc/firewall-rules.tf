@@ -21,7 +21,7 @@ resource "google_compute_firewall" "gke_tcp" {
 
   allow {
     protocol = "tcp"
-    ports    = [ "10250", "443", "15017", "30805", "32454", "15021", "9080" ]
+    ports    = ["10250", "443", "15017", "30805", "32454", "15021", "9080"]
   }
 
   source_tags = var.source-tags

@@ -79,7 +79,6 @@ resource "google_container_node_pool" "gke_cluster_linux_node_pools" {
     machine_type    = lookup(each.value, "node_machine_type", "e2-medium")
     service_account = lookup(each.value, "node_service_account", "")
     preemptible     = lookup(each.value, "preemtible", true)
-    spot            = lookup(each.value, "spot", true)
     oauth_scopes = [
       "https://www.googleapis.com/auth/cloud-platform"
     ]
