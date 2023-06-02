@@ -75,7 +75,7 @@ module "atlas" {
     labels = {
       "usage" = "temp"
     }
-    service_account = data.google_service_account.custom_service_account.name
+    service_account = data.google_service_account.custom_service_account.id
   }
 
   node_pools = [
