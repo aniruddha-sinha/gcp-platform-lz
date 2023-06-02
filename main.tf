@@ -63,20 +63,20 @@ module "atlas" {
 
   kubernetes_version = data.google_container_engine_versions.k8s_versions.release_channel_default_version["STABLE"]
 
-  node_config = {
-    disk_size_gb = "50"
-    disk_type    = "pd-standard"
-    image_type   = "COS_CONTAINERD"
-    machine_type = "n1-standard-1"
-    oauth_scopes = [
-      "https://www.googleapis.com/auth/cloud-platform"
-    ]
-    preemptible = true
-    labels = {
-      "usage" = "temp"
-    }
-    service_account = data.google_service_account.custom_service_account.id
-  }
+  # node_config = {
+  #   disk_size_gb = "50"
+  #   disk_type    = "pd-standard"
+  #   image_type   = "COS_CONTAINERD"
+  #   machine_type = "n1-standard-1"
+  #   oauth_scopes = [
+  #     "https://www.googleapis.com/auth/cloud-platform"
+  #   ]
+  #   preemptible = true
+  #   labels = {
+  #     "usage" = "temp"
+  #   }
+  #   service_account = data.google_service_account.custom_service_account.id
+  # }
 
   node_pools = [
     {

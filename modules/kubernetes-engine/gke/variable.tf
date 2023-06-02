@@ -35,18 +35,18 @@ variable "master_auth_config" {
   })
 }
 
-variable "node_config" {
-  type = object({
-    disk_size_gb    = string
-    disk_type       = string
-    image_type      = string
-    machine_type    = string
-    oauth_scopes    = list(string)
-    preemptible     = bool
-    service_account = string
-    labels          = map(string)
-  })
-}
+# variable "node_config" {
+#   type = object({
+#     disk_size_gb    = string
+#     disk_type       = string
+#     image_type      = string
+#     machine_type    = string
+#     oauth_scopes    = list(string)
+#     preemptible     = bool
+#     service_account = string
+#     labels          = map(string)
+#   })
+# }
 
 variable "node_pools" {
   type        = list(map(any))

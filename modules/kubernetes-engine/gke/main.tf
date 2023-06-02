@@ -4,6 +4,7 @@ locals {
   ]
   node_pools = zipmap(local.node_pool_names, tolist(toset(var.node_pools)))
 }
+
 resource "google_container_cluster" "gke_cluster" {
   provider                 = google-beta
   name                     = var.cluster_name
@@ -46,15 +47,18 @@ resource "google_container_cluster" "gke_cluster" {
     }
   }
 
+  # node_config {
+  #   disk_size_gb    = var.node_config.disk_size_gb
+  #   disk_type       = var.node_config.disk_type
+  #   image_type      = var.node_config.image_type
+  #   machine_type    = var.node_config.machine_type
+  #   oauth_scopes    = var.node_config.oauth_scopes
+  #   preemptible     = var.node_config.preemptible
+  #   service_account = var.node_config.service_account
+  #   labels          = var.node_config.labels
+  # }
   node_config {
-    disk_size_gb    = var.node_config.disk_size_gb
-    disk_type       = var.node_config.disk_type
-    image_type      = var.node_config.image_type
-    machine_type    = var.node_config.machine_type
-    oauth_scopes    = var.node_config.oauth_scopes
-    preemptible     = var.node_config.preemptible
-    service_account = var.node_config.service_account
-    labels          = var.node_config.labels
+
   }
 }
 
