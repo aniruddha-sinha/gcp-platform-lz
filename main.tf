@@ -58,7 +58,7 @@ module "atlas" {
 
   master_auth_config = {
     name    = "mac"
-    ip_addr = "49.37.54.176/32"
+    ip_addr = "43.251.74.141/32"
   }
 
   kubernetes_version = data.google_container_engine_versions.k8s_versions.release_channel_default_version["STABLE"]
