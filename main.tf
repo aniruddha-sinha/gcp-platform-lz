@@ -48,7 +48,7 @@ data "google_service_account" "custom_service_account" {
 }
 
 module "atlas" {
-  depends_on   = [module.vpc, module.iam, data.data.google_service_account.custom_service_account]
+  depends_on   = [module.vpc, module.iam, data.google_service_account.custom_service_account]
   source       = "./modules/kubernetes-engine/gke"
   cluster_name = "atlas"
   project_id   = var.project_id
