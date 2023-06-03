@@ -28,8 +28,11 @@ variable "kubernetes_version" {
   description = "kubernetes version"
 }
 
-variable "cidr_blocks" {
-  type = list(map(any))
+variable "cidr_block" {
+  type = list(object({
+    name    = string
+    ip_addr = string
+  }))
 }
 
 variable "node_pools" {

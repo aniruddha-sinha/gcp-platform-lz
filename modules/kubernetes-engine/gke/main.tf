@@ -43,10 +43,10 @@ resource "google_container_cluster" "gke_cluster" {
   master_authorized_networks_config {
     dynamic "cidr_blocks" {
       for_each = var.cidr_blocks
-      iterator = cidr_record
+
       content {
-        display_name = cidr_record.key
-        cidr_block   = cidr_record.value
+        display_name = cidr_blocks.name
+        cidr_block   = cidr_blocks.ip_addr
       }
     }
   }
