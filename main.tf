@@ -104,34 +104,34 @@ module "atlas" {
 # # # Configure kubernetes provider with Oauth2 access token.
 # # # https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/client_config
 # # # This fetches a new token, which will expire in 1 hour.
-# data "google_client_config" "default" {}
+data "google_client_config" "default" {}
 
-# data "google_container_cluster" "atlas_cluster" {
-#   project  = var.project_id
-#   name     = "atlas"
-#   location = "us-central1-a"
-# }
-
-# provider "kubernetes" {
-#   host                   = "https://${module.atlas.endpoint}"
-#   cluster_ca_certificate = base64decode(module.atlas.client_certificate)
-#   token                  = data.google_client_config.default.access_token
-# }
-
-module "gcloud" {
-  depends_on = [module.atlas, ]
-  source     = "terraform-google-modules/gcloud/google"
-  version    = "~> 0.5"
-
-  platform = "linux"
-
-  create_cmd_entrypoint = "gcloud"
-  create_cmd_body       = "gcloud container clusters get-credentials atlas --zone us-central1-a --project odin-twentyone"
+data "google_container_cluster" "atlas_cluster" {
+  project  = var.project_id
+  name     = "atlas"
+  location = "us-central1-a"
 }
 
 provider "kubernetes" {
-
+  host                   = "https://${module.atlas.endpoint}"
+  cluster_ca_certificate = base64decode(module.atlas.client_certificate)
+  token                  = data.google_client_config.default.access_token
 }
+
+# module "gcloud" {
+#   depends_on = [module.atlas, ]
+#   source     = "terraform-google-modules/gcloud/google"
+#   version    = "~> 0.5"
+
+#   platform = "linux"
+
+#   create_cmd_entrypoint = "gcloud"
+#   create_cmd_body       = "gcloud container clusters get-credentials atlas --zone us-central1-a --project odin-twentyone"
+# }
+
+# provider "kubernetes" {
+
+# }
 
 module "kube_cluster_internal" {
   depends_on = [
