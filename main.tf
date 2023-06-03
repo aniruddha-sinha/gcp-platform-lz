@@ -58,14 +58,14 @@ module "atlas" {
 
   master_auth_config = {
     name    = "mac"
-    ip_addr = "43.251.74.141/32"
+    ip_addr = "43.251.74.172/32"
   }
 
   kubernetes_version = data.google_container_engine_versions.k8s_versions.release_channel_default_version["STABLE"]
 
   node_pools = [
     {
-      name               = "pool1"
+      name               = "pool2"
       version            = data.google_container_engine_versions.k8s_versions.release_channel_default_version["STABLE"]
       initial_node_count = 2
       auto_repair        = true
@@ -84,32 +84,32 @@ module "atlas" {
 #uncomment the below code and commit again!
 
 # #kubernetes
-# data "google_client_config" "provider" {}
+data "google_client_config" "provider" {}
 
-# data "google_container_cluster" "gke_cluster" {
-#   project  = var.project_id
-#   name     = module.atlas.cluster_name
-#   location = "us-central1-a"
-# }
+data "google_container_cluster" "gke_cluster" {
+  project  = var.project_id
+  name     = module.atlas.cluster_name
+  location = "us-central1-a"
+}
 
-# provider "kubernetes" {
-#   host  = "https://${data.google_container_cluster.gke_cluster.endpoint}"
-#   token = data.google_client_config.provider.access_token
-#   cluster_ca_certificate = base64decode(
-#     data.google_container_cluster.gke_cluster.master_auth[0].cluster_ca_certificate,
-#   )
-# }
+provider "kubernetes" {
+  host  = "https://${data.google_container_cluster.gke_cluster.endpoint}"
+  token = data.google_client_config.provider.access_token
+  cluster_ca_certificate = base64decode(
+    data.google_container_cluster.gke_cluster.master_auth[0].cluster_ca_certificate,
+  )
+}
 
-# module "kube_cluster_internal" {
-#   depends_on = [
-#     module.atlas,
-#   ]
+module "kube_cluster_internal" {
+  depends_on = [
+    module.atlas,
+  ]
 
-#   source = "./modules/kubernetes"
+  source = "./modules/kubernetes"
 
-#   kubernetes_namespace_list = [
-#     "foxtrot",
-#     "victor",
-#     "zulu"
-#   ]
-# }
+  kubernetes_namespace_list = [
+    "foxtrot",
+    "victor",
+    "zulu"
+  ]
+}
