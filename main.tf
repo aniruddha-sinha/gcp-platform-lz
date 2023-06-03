@@ -104,7 +104,7 @@ data "google_client_config" "default" {}
 
 data "google_container_cluster" "atlas_cluster" {
   name     = "atlas"
-  location = "us-central1"
+  location = "us-central1-a"
 }
 
 provider "kubernetes" {
