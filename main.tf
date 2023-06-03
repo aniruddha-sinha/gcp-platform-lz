@@ -103,7 +103,6 @@ data "google_container_cluster" "atlas_cluster" {
 }
 
 provider "kubernetes" {
-  project = var.project_id
   host    = data.terraform_remote_state.tf_cloud_remote_state.outputs.kubernetes_cluster_host
 
   token                  = data.google_client_config.default.access_token
