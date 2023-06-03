@@ -45,8 +45,8 @@ resource "google_container_cluster" "gke_cluster" {
       for_each = var.cidr_blocks
 
       content {
-        display_name = cidr_blocks.name
-        cidr_block   = cidr_blocks.ip_addr
+        display_name = cidr_blocks.value["name"]
+        cidr_block   = cidr_blocks.value["ip_addr"]
       }
     }
   }
