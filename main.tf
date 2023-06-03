@@ -90,17 +90,6 @@ module "atlas" {
   ]
 }
 
-# data "terraform_remote_state" "tf_cloud_remote_state" {
-#   backend = "remote"
-
-#   config = {
-#     organization = "asinha0493"
-#     workspaces = {
-#       name = "gcp-platform-lz"
-#     }
-#   }
-# }
-
 # # # Configure kubernetes provider with Oauth2 access token.
 # # # https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/client_config
 # # # This fetches a new token, which will expire in 1 hour.
@@ -118,26 +107,24 @@ provider "kubernetes" {
   token                  = data.google_client_config.default.access_token
 }
 
-# provider "kubernetes" {
-#   host  = "https://${module.atlas.endpoint}"
-#   cluster_ca_certificate = base64decode(module.atlas.cluster_ca_certificate)
-#   exec {
-#       api_version = "client.authentication.k8s.io/v1beta1"
-#       args        = []
-#       command     = "gke-gcloud-auth-plugin"
-#   }
-# }
+resource "null_resource" "health_check" {
 
-module "kube_cluster_internal" {
-  depends_on = [
-    module.atlas,
-  ]
+ provisioner "local-exec" {
 
-  source = "./modules/kubernetes"
-
-  kubernetes_namespace_list = [
-    "foxtrot",
-    "victor",
-    "zulu"
-  ]
+    command = "/bin/bash gcloud container clusters get-credentials atlas --zone us-central1-a --project odin-twentyone"
+  }
 }
+
+# module "kube_cluster_internal" {
+#   depends_on = [
+#     module.atlas,
+#   ]
+
+#   source = "./modules/kubernetes"
+
+#   kubernetes_namespace_list = [
+#     "foxtrot",
+#     "victor",
+#     "zulu"
+#   ]
+# }
