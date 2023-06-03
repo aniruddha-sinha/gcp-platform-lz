@@ -28,7 +28,7 @@ variable "kubernetes_version" {
   description = "kubernetes version"
 }
 
-variable "cidr_block" {
+variable "cidr_blocks" {
   type = list(object({
     name    = string
     ip_addr = string
