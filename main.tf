@@ -103,7 +103,7 @@ provider "google" {
 data "google_client_config" "default" {}
 
 data "google_container_cluster" "atlas_cluster" {
-  name     = data.terraform_remote_state.tf_cloud_remote_state.outputs.kubernetes_cluster_name
+  name     = "atlas"
   location = "us-central1"
 }
 
