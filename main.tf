@@ -103,7 +103,6 @@ data "google_container_cluster" "atlas_cluster" {
 }
 
 provider "kubernetes" {
-  load_config_file       = false
   host                   = "https://${module.atlas.endpoint}"
   cluster_ca_certificate = base64decode(module.atlas.client_certificate)
   token                  = data.google_client_config.default.access_token
