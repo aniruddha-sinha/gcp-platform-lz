@@ -68,7 +68,7 @@ module "atlas" {
     },
     {
       name    = "tf-cloud"
-      ip_addr = "${chomp(data.http.myip.body)}/32"
+      ip_addr = "${chomp(data.http.tf_cloud_ip.body)}/32"
     }
   ]
   kubernetes_version = data.google_container_engine_versions.k8s_versions.release_channel_default_version["STABLE"]
