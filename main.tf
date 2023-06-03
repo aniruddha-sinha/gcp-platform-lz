@@ -67,7 +67,7 @@ module "atlas" {
     {
       name               = "pool2"
       version            = data.google_container_engine_versions.k8s_versions.release_channel_default_version["STABLE"]
-      initial_node_count = 2
+      initial_node_count = 1
       auto_repair        = true
       auto_upgrade       = true
       image_type         = "COS_CONTAINERD"
@@ -80,24 +80,38 @@ module "atlas" {
   ]
 }
 
-#the below code will only work when the cluster actually will exist; so once the cluster is created; 
-#uncomment the below code and commit again!
+data "terraform_remote_state" "tf_cloud_remote_state" {
+  backend = "remote"
 
-# #kubernetes
-data "google_client_config" "provider" {}
+  config = {
+    organization = "asinha0493"
+    workspaces = {
+      name = "gcp-platform-lz"
+    }
+  }
+}
 
-data "google_container_cluster" "gke_cluster" {
-  project  = var.project_id
-  name     = module.atlas.cluster_name
-  location = "us-central1-a"
+# Retrieve GKE cluster information
+provider "google" {
+  project = data.terraform_remote_state.gke.outputs.project_id
+  region  = "us-central1"
+}
+
+# Configure kubernetes provider with Oauth2 access token.
+# https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/client_config
+# This fetches a new token, which will expire in 1 hour.
+data "google_client_config" "default" {}
+
+data "google_container_cluster" "atlas_cluster" {
+  name     = data.terraform_remote_state.tf_cloud_remote_state.outputs.kubernetes_cluster_name
+  location = "us-central1"
 }
 
 provider "kubernetes" {
-  host  = "https://${data.google_container_cluster.gke_cluster.endpoint}"
-  token = data.google_client_config.provider.access_token
-  cluster_ca_certificate = base64decode(
-    data.google_container_cluster.gke_cluster.master_auth[0].cluster_ca_certificate,
-  )
+  host = data.terraform_remote_state.atlas_cluster.outputs.kubernetes_cluster_host
+
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(data.google_container_cluster.atlas_cluster.master_auth[0].cluster_ca_certificate)
 }
 
 module "kube_cluster_internal" {
