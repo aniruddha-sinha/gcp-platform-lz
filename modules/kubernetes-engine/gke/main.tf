@@ -51,6 +51,7 @@ resource "google_container_cluster" "gke_cluster" {
     disk_size_gb = 50
     disk_type    = "pd-standard"
     machine_type = "n1-standard-1"
+    preemptible  = true
   }
 }
 
