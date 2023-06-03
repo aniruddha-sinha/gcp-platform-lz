@@ -93,7 +93,7 @@ data "terraform_remote_state" "tf_cloud_remote_state" {
 
 # Retrieve GKE cluster information
 provider "google" {
-  project = data.terraform_remote_state.gke.outputs.project_id
+  project = "odin-twentyone"
   region  = "us-central1"
 }
 
