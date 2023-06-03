@@ -1,3 +1,8 @@
+#get the public ip of the instance running this code
+data "http" "tf_cloud_ip" {
+  url = "http://api.ipify.org"
+}
+
 module "vpc" {
   source = "./modules/vpc"
 
@@ -56,11 +61,16 @@ module "atlas" {
   network      = data.google_compute_network.gke_network.name
   subnetwork   = data.google_compute_subnetwork.gke_subnetwork.name
 
-  master_auth_config = {
-    name    = "mac"
-    ip_addr = "43.251.74.172/32"
-  }
-
+  master_auth_config = [
+    {
+      name    = "mac"
+      ip_addr = "43.251.74.172/32"
+    },
+    {
+      name    = "tf-cloud"
+      ip_addr = "${chomp(data.http.myip.body)}/32"
+    }
+  ]
   kubernetes_version = data.google_container_engine_versions.k8s_versions.release_channel_default_version["STABLE"]
 
   node_pools = [
@@ -116,7 +126,7 @@ module "gcloud" {
   platform = "linux"
 
   create_cmd_entrypoint = "gcloud"
-  create_cmd_body       = "container clusters get-credentials ${module.atlas.cluster_name} --zone=us-central1-a --project=odin-twentyone"
+  create_cmd_body       = "gcloud container clusters get-credentials atlas --zone us-central1-a --project odin-twentyone"
 }
 
 provider "kubernetes" {

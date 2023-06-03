@@ -28,11 +28,8 @@ variable "kubernetes_version" {
   description = "kubernetes version"
 }
 
-variable "master_auth_config" {
-  type = object({
-    name    = string,
-    ip_addr = string
-  })
+variable "cidr_blocks" {
+  type = list(map(any))
 }
 
 variable "node_pools" {

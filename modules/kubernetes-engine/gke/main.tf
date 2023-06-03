@@ -41,9 +41,13 @@ resource "google_container_cluster" "gke_cluster" {
   }
 
   master_authorized_networks_config {
-    cidr_blocks {
-      display_name = var.master_auth_config.name
-      cidr_block   = var.master_auth_config.ip_addr
+    dynamic "cidr_blocks" {
+      for_each = var.cidr_blocks
+      iterator = cidr_record
+      content {
+        display_name = cidr_record.key
+        cidr_block   = cidr_record.value
+      }
     }
   }
 
@@ -85,4 +89,4 @@ resource "google_container_node_pool" "gke_cluster_linux_node_pools" {
   lifecycle {
     ignore_changes = [initial_node_count]
   }
-} 
+}
