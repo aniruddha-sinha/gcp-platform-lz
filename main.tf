@@ -61,7 +61,7 @@ module "atlas" {
   network      = data.google_compute_network.gke_network.name
   subnetwork   = data.google_compute_subnetwork.gke_subnetwork.name
 
-  master_auth_config = [
+  cidr_blocks = [
     {
       name    = "mac"
       ip_addr = "43.251.74.172/32"
