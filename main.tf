@@ -65,7 +65,7 @@ module "atlas" {
 
   node_pools = [
     {
-      name               = "pool2"
+      name               = "pool2-a"
       version            = data.google_container_engine_versions.k8s_versions.release_channel_default_version["STABLE"]
       initial_node_count = 1
       auto_repair        = true
@@ -91,39 +91,33 @@ data "terraform_remote_state" "tf_cloud_remote_state" {
   }
 }
 
-# # Retrieve GKE cluster information
-# provider "google" {
-#   project = "odin-twentyone"
-#   region  = "us-central1"
-# }
-
 # # Configure kubernetes provider with Oauth2 access token.
 # # https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/client_config
 # # This fetches a new token, which will expire in 1 hour.
-# data "google_client_config" "default" {}
+data "google_client_config" "default" {}
 
-# data "google_container_cluster" "atlas_cluster" {
-#   name     = "atlas"
-#   location = "us-central1-a"
-# }
+data "google_container_cluster" "atlas_cluster" {
+  name     = "atlas"
+  location = "us-central1-a"
+}
 
-# provider "kubernetes" {
-#   host = data.terraform_remote_state.tf_cloud_remote_state.outputs.kubernetes_cluster_host
+provider "kubernetes" {
+  host = data.terraform_remote_state.tf_cloud_remote_state.outputs.kubernetes_cluster_host
 
-#   token                  = data.google_client_config.default.access_token
-#   cluster_ca_certificate = base64decode(data.google_container_cluster.atlas_cluster.master_auth[0].cluster_ca_certificate)
-# }
+  token                  = data.google_client_config.default.access_token
+  cluster_ca_certificate = base64decode(data.google_container_cluster.atlas_cluster.master_auth[0].cluster_ca_certificate)
+}
 
-# module "kube_cluster_internal" {
-#   depends_on = [
-#     module.atlas,
-#   ]
+module "kube_cluster_internal" {
+  depends_on = [
+    module.atlas,
+  ]
 
-#   source = "./modules/kubernetes"
+  source = "./modules/kubernetes"
 
-#   kubernetes_namespace_list = [
-#     "foxtrot",
-#     "victor",
-#     "zulu"
-#   ]
-# }
+  kubernetes_namespace_list = [
+    "foxtrot",
+    "victor",
+    "zulu"
+  ]
+}
