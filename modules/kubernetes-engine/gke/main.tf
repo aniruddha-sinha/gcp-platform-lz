@@ -50,7 +50,7 @@ resource "google_container_cluster" "gke_cluster" {
   node_config {
     disk_size_gb = 50
     disk_type    = "pd-standard"
-    machine_type = "n1-standard-1"
+    machine_type = "e2-medium"
     preemptible  = true
   }
 }
