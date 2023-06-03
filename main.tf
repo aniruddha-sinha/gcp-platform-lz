@@ -112,11 +112,20 @@ data "google_container_cluster" "atlas_cluster" {
   location = "us-central1-a"
 }
 
+# provider "kubernetes" {
+#   host                   = "https://${module.atlas.endpoint}"
+#   cluster_ca_certificate = base64decode(module.atlas.client_certificate)
+#   token                  = data.google_client_config.default.access_token
+# }
+
 provider "kubernetes" {
-  insecure               = true
-  host                   = "https://${module.atlas.endpoint}"
-  cluster_ca_certificate = base64decode(module.atlas.client_certificate)
-  token                  = data.google_client_config.default.access_token
+  host  = "https://${module.atlas.endpoint}"
+  cluster_ca_certificate = base64decode(module.atlas.cluster_ca_certificate)
+  exec {
+      api_version = "client.authentication.k8s.io/v1beta1"
+      args        = []
+      command     = "gke-gcloud-auth-plugin"
+  }
 }
 
 module "kube_cluster_internal" {
