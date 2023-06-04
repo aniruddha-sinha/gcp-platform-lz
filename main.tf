@@ -99,6 +99,7 @@ data "google_client_config" "default_config" {
 }
 
 data "google_container_cluster" "default" {
+  project    = var.project_id
   name       = local.cluster_name
   location   = "us-central1-a"
   depends_on = [module.atlas]
