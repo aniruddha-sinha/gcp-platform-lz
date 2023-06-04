@@ -1,0 +1,1 @@
+kubectl run -it --rm -n victor test --overrides='{ "apiVersion": "v1", "spec": { "serviceAccount": "odin" }  }' --image gcr.io/cloud-builders/gsutil ls

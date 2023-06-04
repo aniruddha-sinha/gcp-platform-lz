@@ -1,10 +1,9 @@
 terraform {
-  cloud {
-    organization = "asinha0493"
-    workspaces {
-      name = "gcp-platform-lz"
-    }
+  backend "gcs" {
+    bucket = "odin-admin-state-bkt"
+    prefix = "gcp-platform-lz/state"
   }
+
 
   required_providers {
     google = {

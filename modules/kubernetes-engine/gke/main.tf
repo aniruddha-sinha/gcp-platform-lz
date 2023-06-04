@@ -87,6 +87,10 @@ resource "google_container_node_pool" "gke_cluster_linux_node_pools" {
   }
 
   lifecycle {
-    ignore_changes = [initial_node_count]
+    ignore_changes = [
+      initial_node_count,
+      node_count,
+      version
+    ]
   }
 }

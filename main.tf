@@ -26,7 +26,7 @@ module "iam" {
   service_account_id           = "gke-node-sa"
   service_account_display_name = "GKE Node Service Account"
   role_list = [
-    "roles/editor"
+    "roles/storage.admin"
   ]
 }
 
@@ -94,16 +94,17 @@ module "atlas" {
   ]
 }
 
-data "google_client_config" "default_config" {
-  depends_on = [module.atlas]
-}
+# data "google_client_config" "default_config" {
+#   depends_on = [module.atlas]
+# }
 
 provider "kubernetes" {
-  host  = "https://${module.atlas.endpoint}"
-  token = data.google_client_config.default_config.access_token
-  cluster_ca_certificate = base64decode(
-    module.atlas.cluster_ca_certificate,
-  )
+  # host  = "https://${module.atlas.endpoint}"
+  # token = data.google_client_config.default_config.access_token
+  # cluster_ca_certificate = base64decode(
+  #   module.atlas.cluster_ca_certificate,
+  # )
+  config_path = "~/.kube/config"
 }
 
 module "kube_cluster_internal" {
@@ -114,15 +115,15 @@ module "kube_cluster_internal" {
   source = "./modules/kubernetes"
 
   kubernetes_namespace_list = [
-    "foxtrot",
     "victor",
-    "zulu"
+    "zulu",
+    "foxtrot"
   ]
 
   kubernetes_service_account_list = [
     {
       name      = "odin"
-      namespace = "foxtrot"
+      namespace = "victor"
     },
     {
       name      = "ripcord"
@@ -130,11 +131,21 @@ module "kube_cluster_internal" {
     },
     {
       name      = "xray"
-      namespace = "victor"
+      namespace = "foxtrot"
     },
     {
       name      = "shark"
-      namespace = "zulu"
+      namespace = "foxtrot"
     }
+  ]
+}
+
+# #workload identity
+resource "google_service_account_iam_binding" "workload_identity_role" {
+  count              = length(module.kube_cluster_internal.kubernetes_service_account_list)
+  service_account_id = data.google_service_account.custom_service_account.name
+  role               = "roles/iam.workloadIdentityUser"
+  members = [
+    "serviceAccount:${var.project_id}.svc.id.goog[${module.kube_cluster_internal.kubernetes_service_account_list[count.index].namespace}/${module.kube_cluster_internal.kubernetes_service_account_list[count.index].name}]"
   ]
 }
