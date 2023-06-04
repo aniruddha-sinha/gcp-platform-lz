@@ -98,18 +98,11 @@ data "google_client_config" "default_config" {
   depends_on = [module.atlas]
 }
 
-data "google_container_cluster" "default" {
-  project    = var.project_id
-  name       = local.cluster_name
-  location   = "us-central1-a"
-  depends_on = [module.atlas]
-}
-
 provider "kubernetes" {
   host  = "https://${module.atlas.endpoint}"
   token = data.google_client_config.default_config.access_token
   cluster_ca_certificate = base64decode(
-    data.google_container_cluster.default.master_auth[0].cluster_ca_certificate,
+    module.atlas.cluster_ca_certificate,
   )
 }
 
