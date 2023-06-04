@@ -118,4 +118,23 @@ module "kube_cluster_internal" {
     "victor",
     "zulu"
   ]
+
+  kubernetes_service_account_list = [
+    {
+      name      = "odin"
+      namespace = "foxtrot"
+    },
+    {
+      name      = "ripcord"
+      namespace = "foxtrot"
+    },
+    {
+      name      = "xray"
+      namespace = "victor"
+    },
+    {
+      name      = "shark"
+      namespace = "zulu"
+    }
+  ]
 }

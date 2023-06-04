@@ -8,3 +8,4 @@ resource "kubernetes_namespace" "kubernetes_namespace" {
     name = var.kubernetes_namespace_list[count.index]
   }
 }
+
